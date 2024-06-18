@@ -117,20 +117,20 @@
 
         <script>
             const $ = el => document.querySelector(el)
-
+        
             const $loginForm = $('#login-form')
             const $loginSpan = $('#login-form span')
-
+        
             const $registerForm = $('#register-form')
             const $registerSpan = $('#register-form span')
-
+        
             const $logoutButton = $('#close-session')
-
-            loginForm?.addEventListener('submit', e => {
-                e.preventDefault()
+        
+            $loginForm?.addEventListener('submit', e => {
+                e.preventDefault()                
                 const username = $('#login-username').value
                 const password = $('#login-password').value
-
+        
                 fetch ('/login', {
                     method: 'POST',
                     headers: {
@@ -140,25 +140,25 @@
                 })
                 .then(res => {
                     if(res.ok){
-                        loginSpan.innerText = 'Session started, Logging in...'
-                        loginSpan.style.color = 'green'
+                        $loginSpan.innerText = 'Session started, Logging in...'
+                        $loginSpan.style.color = 'green'
                         setTimeout( () => {
                             window.location.href = '/protected'
                         },2000)
                     }
                     else{
-                        loginSpan.innerText = 'Error logging in'
-                        loginSpan.style.color = 'red'
+                        $loginSpan.innerText = 'Error logging in'
+                        $loginSpan.style.color = 'red'
                     }
                 })
             })
-
-            registerForm?.addEventListener('submit', e => {
+        
+            $registerForm?.addEventListener('submit', e => {
                 e.preventDefault()
                 const username = $('#register-username').value
                 const password = $('#register-password').value
                 const confirmPassword = $('#register-confirm-password').value
-
+        
                 if (password!==confirmPassword) {
                     alert('Password do not match')
                     return
@@ -173,8 +173,8 @@
                 .then(res => {
                     console.log(res)
                     if(res.ok){
-                        registerSpan.innerText = 'Registered user, Logging in...'
-                        registerSpan.style.color = 'green'
+                        $registerSpan.innerText = 'Registered user, Logging in...'
+                        $registerSpan.style.color = 'green'
                         setTimeout( () => {
                             window.location.href = '/protected'
                         },2000)
@@ -185,8 +185,8 @@
                     }
                 })
             })
-
-           logoutButton?.addEventListener('click', e => {
+        
+            $logoutButton?.addEventListener('click', e => {
                 e.preventDefault()
                 fetch ('/logout', {
                     method: 'POST',
@@ -199,7 +199,8 @@
                     window.location.href = '/'                    
                 })
            }) 
-
+        
         </script>
+        
     </body>
 </html>
