@@ -8,14 +8,17 @@ const app = express()
 app.set('view engine', 'ejs')
 app.use(express.json())
 app.use(cookieParser())
+
+app.use(req, res, next) => {
+    const token = req.cookies.access_token
+    let data = null
+}
 // const PORT = process.env.PORT ?? 3000
 
 
 
 app.get('/', (req, res) => {
-  // res.send('<h1>Hello</h1>')
-  const token = req.cookies.access_token
-
+  // res.send('<h1>Hello</h1>')  
   if (!token) return res.render('index')
   try {
     const data = jwt.verify(token, SECRET_JWT_KEY)
