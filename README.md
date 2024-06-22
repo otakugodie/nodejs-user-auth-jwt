@@ -9,6 +9,6 @@
 7. JWT
 8. Refactoring using Middleware
 9. Close session
-10. Refresh token
+10. Refresh token (not yet)
 
 ## Tutorial in: https://www.youtube.com/watch?v=UqnnhAZxRac
