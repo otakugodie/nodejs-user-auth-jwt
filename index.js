@@ -5,29 +5,27 @@ import { PORT, SECRET_JWT_KEY } from './config.js'
 import { UserRepository } from './user-repository.js'
 
 const app = express()
+
 app.set('view engine', 'ejs')
+
 app.use(express.json())
 app.use(cookieParser())
 
-app.use(req, res, next) => {
-    const token = req.cookies.access_token
-    let data = null
-}
-// const PORT = process.env.PORT ?? 3000
+app.use((req, res, next) => {
+  const token = req.cookies.access_token
+  req.session = { user: null }
 
-
-
-app.get('/', (req, res) => {
-  // res.send('<h1>Hello</h1>')  
-  if (!token) return res.render('index')
   try {
     const data = jwt.verify(token, SECRET_JWT_KEY)
-    // res.render('protected', data)
-    res.render('index', data)
-  } catch (error) {
-    res.render('index')
-  }
-  // res.render('index')
+    req.session.user = data
+  } catch {}
+
+  next() // Go to next route or middleware
+})
+
+app.get('/', (req, res) => {
+  const { user } = req.session
+  res.render('index', user)
 })
 
 app.post('/login', async (req, res) => {
@@ -67,20 +65,15 @@ app.post('/register', async (req, res) => {
   }
 })
 
-app.post('/logout', (req, res) => {})
+app.post('/logout', (req, res) => {
+  res.clearCookie('access_token')
+    .json({ message: 'Logout succesful' })
+})
 
 app.get('/protected', (req, res) => {
-  const token = req.cookies.access_token
-  if (!token) {
-    return res.status(403).send('Access not authorized')
-  }
-  try {
-    const data = jwt.verify(token, SECRET_JWT_KEY)
-    // console.log(data)
-    res.render('protected', data)
-  } catch (error) {
-    res.status(401).send('Access not authorized')
-  }
+  const { user } = req.session
+  if (!user) return res.status(403).send('Access not authorized')
+  res.render('protected', user)
 })
 
 app.listen(PORT, () => {
